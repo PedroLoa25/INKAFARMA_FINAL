@@ -82,28 +82,10 @@ public class INKAFARMA_FINAL {
             String opcion = sc.nextLine();
             switch (opcion) {
                 case "1":
-                    System.out.print("Nombre: ");
-                    String nombre = sc.nextLine();
-                    System.out.print("Marca: ");
-                    String marca = sc.nextLine();
-                    System.out.print("Precio: ");
-                    double precio = Double.parseDouble(sc.nextLine());
-                    System.out.print("Stock: ");
-                    int stock = Integer.parseInt(sc.nextLine());
-                    agregarProducto(nombre, marca, precio, stock);
-                    System.out.println("✅ Producto agregado");
+                    ingresarProductoDesdeAdmin();
                     break;
                 case "2":
-                    System.out.print("Nombre de la oferta: ");
-                    String n = sc.nextLine();
-                    System.out.print("Marca: ");
-                    String m = sc.nextLine();
-                    System.out.print("Precio: ");
-                    double p = Double.parseDouble(sc.nextLine());
-                    System.out.print("Stock: ");
-                    int s = Integer.parseInt(sc.nextLine());
-                    agregarOferta(n, m, p, s);
-                    System.out.println("✅ Oferta agregada");
+                    ingresarOfertaDesdeAdmin();
                     break;
                 case "3":
                     return;
@@ -111,6 +93,32 @@ public class INKAFARMA_FINAL {
                     System.out.println("❌ Opción inválida");
             }
         }
+    }
+
+    public static void ingresarProductoDesdeAdmin() {
+        System.out.print("Nombre: ");
+        String nombre = sc.nextLine();
+        System.out.print("Marca: ");
+        String marca = sc.nextLine();
+        System.out.print("Precio: ");
+        double precio = Double.parseDouble(sc.nextLine());
+        System.out.print("Stock: ");
+        int stock = Integer.parseInt(sc.nextLine());
+        agregarProducto(nombre, marca, precio, stock);
+        System.out.println("✅ Producto agregado");
+    }
+
+    public static void ingresarOfertaDesdeAdmin() {
+        System.out.print("Nombre de la oferta: ");
+        String n = sc.nextLine();
+        System.out.print("Marca: ");
+        String m = sc.nextLine();
+        System.out.print("Precio: ");
+        double p = Double.parseDouble(sc.nextLine());
+        System.out.print("Stock: ");
+        int s = Integer.parseInt(sc.nextLine());
+        agregarOferta(n, m, p, s);
+        System.out.println("✅ Oferta agregada");
     }
 
     public static void agregarProducto(String nombre, String marca, double precio, int stock) {
@@ -207,23 +215,10 @@ public class INKAFARMA_FINAL {
             String opcion = sc.nextLine();
             switch (opcion) {
                 case "1":
-                    for (int i = 0; i < nombres.size(); i++) {
-                        System.out.println(i + ". " + nombres.get(i) + " - " + marcas.get(i) + " - S/" + precios.get(i) + " - Stock: " + stocks.get(i));
-                    }
+                    mostrarProductosMamayBebe();
                     break;
                 case "2":
-                    System.out.print("Índice del producto: ");
-                    int idx = Integer.parseInt(sc.nextLine());
-                    System.out.print("Cantidad: ");
-                    int cant = Integer.parseInt(sc.nextLine());
-                    if (stocks.get(idx) >= cant) {
-                        carrito.add(nombres.get(idx));
-                        cantidades.add(cant);
-                        stocks.set(idx, stocks.get(idx) - cant);
-                        System.out.println("✅ Producto agregado");
-                    } else {
-                        System.out.println("❌ Stock insuficiente");
-                    }
+                    agregarProductoAlCarritoPorIndice();
                     break;
                 case "3":
                     filtrarPorMarca();
@@ -236,6 +231,27 @@ public class INKAFARMA_FINAL {
                 default:
                     System.out.println("❌ Opción inválida");
             }
+        }
+    }
+
+    public static void mostrarProductosMamayBebe() {
+        for (int i = 0; i < nombres.size(); i++) {
+            System.out.println(i + ". " + nombres.get(i) + " - " + marcas.get(i) + " - S/" + precios.get(i) + " - Stock: " + stocks.get(i));
+        }
+    }
+
+    public static void agregarProductoAlCarritoPorIndice() {
+        System.out.print("Índice del producto: ");
+        int indice = Integer.parseInt(sc.nextLine());
+        System.out.print("Cantidad: ");
+        int cant = Integer.parseInt(sc.nextLine());
+        if (stocks.get(indice) >= cant) {
+            carrito.add(nombres.get(indice));
+            cantidades.add(cant);
+            stocks.set(indice, stocks.get(indice) - cant);
+            System.out.println("✅ Producto agregado");
+        } else {
+            System.out.println("❌ Stock insuficiente");
         }
     }
 
@@ -264,12 +280,13 @@ public class INKAFARMA_FINAL {
     public static void main(String[] args) {
         agregarProducto("Pañales Pequeñín", "Pequeñín", 25.90, 15);
         agregarProducto("Toallitas Húmedas", "Pequeñín", 9.50, 20);
-        agregarProducto("Leche Enfamil", "MeadJohnson", 89.00, 10);
+        agregarProducto("Leche Enfamil", "BabyCare", 89.00, 10);
         agregarProducto("Jabón Hipoalergénico", "BabyCare", 12.30, 30);
         agregarProducto("Shampoo Bebé", "Johnson's", 14.20, 25);
         agregarProducto("Cereal Infantil", "Nestlé", 10.50, 18);
-        agregarProducto("Biberón Avent", "Philips", 34.90, 12);
-        agregarProducto("Pomada para Rozaduras", "Desitin", 22.80, 14);
+        agregarProducto("Biberón Avent", "Nestlé", 34.90, 12);
+        agregarProducto("Pomada para Rozaduras", "Johnson's", 22.80, 14);
+
         agregarOferta("Multivitaminas", "Centrum", 45.90, 8);
         agregarOferta("Proteína Whey", "Optimum", 125.00, 5);
         agregarOferta("Vitamina C 1000mg", "Sundown", 30.50, 10);
