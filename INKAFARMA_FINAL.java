@@ -23,6 +23,9 @@ public class INKAFARMA_FINAL {
     static ArrayList<String> carrito = new ArrayList<>();
     static ArrayList<Integer> cantidades = new ArrayList<>();
 
+    static ArrayList<String> vendedoresCorreos = new ArrayList<>();
+    static ArrayList<String> vendedoresContras = new ArrayList<>();
+
     public static void registrarUsuario() {
         System.out.println("=== REGISTRO DE USUARIO ===");
         System.out.print("Nombre: ");
@@ -57,15 +60,25 @@ public class INKAFARMA_FINAL {
             String correo = sc.nextLine();
             System.out.print("Contraseña: ");
             String contra = sc.nextLine();
+
             if (correo.equals(ADMIN_CORREO) && contra.equals(ADMIN_CONTRA)) {
                 System.out.println("🔐 Acceso como ADMIN");
                 menuAdmin();
                 return false;
             }
+
+            for (int j = 0; j < vendedoresCorreos.size(); j++) {
+                if (correo.equals(vendedoresCorreos.get(j)) && contra.equals(vendedoresContras.get(j))) {
+                    System.out.println("🔓 Bienvenido, vendedor");
+                    return false;
+                }
+            }
+
             if (correo.equals(usuarioCorreo) && contra.equals(usuarioContraseña)) {
                 System.out.println("✅ Bienvenido/a " + usuarioNombre);
                 return true;
             }
+
             System.out.println("❌ Intento fallido " + (i + 1) + "/3");
         }
         System.out.println("🔒 Acceso denegado");
@@ -77,7 +90,11 @@ public class INKAFARMA_FINAL {
             System.out.println("\n=== MENÚ ADMIN ===");
             System.out.println("1. Agregar producto");
             System.out.println("2. Agregar oferta");
-            System.out.println("3. Salir del admin");
+            System.out.println("3. Registrar vendedor");
+            System.out.println("4. Mostrar todos los productos");
+            System.out.println("5. Mostrar todas las ofertas");
+            System.out.println("6. Eliminar producto por índice");
+            System.out.println("7. Salir del admin");
             System.out.print("Opción: ");
             String opcion = sc.nextLine();
             switch (opcion) {
@@ -88,10 +105,56 @@ public class INKAFARMA_FINAL {
                     ingresarOfertaDesdeAdmin();
                     break;
                 case "3":
+                    registrarVendedor();
+                    break;
+                case "4":
+                    mostrarProductosMamayBebe();
+                    break;
+                case "5":
+                    mostrarOfertas();
+                    break;
+                case "6":
+                    eliminarProductoPorIndice();
+                    break;
+                case "7":
                     return;
                 default:
                     System.out.println("❌ Opción inválida");
             }
+        }
+    }
+
+    public static void registrarVendedor() {
+        System.out.println("=== REGISTRAR VENDEDOR ===");
+        String correo, contra;
+        do {
+            System.out.print("Correo electrónico: ");
+            correo = sc.nextLine();
+        } while (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"));
+
+        do {
+            System.out.print("Contraseña (mín. 8 caracteres, 1 mayús., 1 minús., 1 número, 1 símbolo): ");
+            contra = sc.nextLine();
+        } while (!contra.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$"));
+
+        vendedoresCorreos.add(correo);
+        vendedoresContras.add(contra);
+        System.out.println("✅ Vendedor registrado");
+    }
+
+
+    public static void eliminarProductoPorIndice() {
+        mostrarProductosMamayBebe();
+        System.out.print("Índice del producto a eliminar: ");
+        int i = Integer.parseInt(sc.nextLine());
+        if (i >= 0 && i < nombres.size()) {
+            nombres.remove(i);
+            marcas.remove(i);
+            precios.remove(i);
+            stocks.remove(i);
+            System.out.println("✅ Producto eliminado");
+        } else {
+            System.out.println("❌ Índice inválido");
         }
     }
 
@@ -240,6 +303,12 @@ public class INKAFARMA_FINAL {
         }
     }
 
+    public static void mostrarOfertas() {
+        for (int i = 0; i < ofertasNombres.size(); i++) {
+            System.out.println(i + ". " + ofertasNombres.get(i) + " - " + ofertasMarcas.get(i) + " - S/" + ofertasPrecios.get(i) + " - Stock: " + ofertasStocks.get(i));
+        }
+    }
+
     public static void agregarProductoAlCarritoPorIndice() {
         System.out.print("Índice del producto: ");
         int indice = Integer.parseInt(sc.nextLine());
@@ -291,6 +360,7 @@ public class INKAFARMA_FINAL {
         agregarOferta("Proteína Whey", "Optimum", 125.00, 5);
         agregarOferta("Vitamina C 1000mg", "Sundown", 30.50, 10);
         agregarOferta("Omega 3", "Nature Made", 40.00, 6);
+
         while (true) {
             System.out.println("\n=== INKAFARMA ===");
             System.out.println("1. Registrar");
