@@ -19,6 +19,7 @@ public class INKAFARMA_FINAL {
     static ArrayList<String> marcas = new ArrayList<>();
     static ArrayList<Double> precios = new ArrayList<>();
     static ArrayList<Integer> stocks = new ArrayList<>();
+    static ArrayList<String> categorias = new ArrayList<>();
 
     static ArrayList<String> ofertasNombres = new ArrayList<>();
     static ArrayList<String> ofertasMarcas = new ArrayList<>();
@@ -55,7 +56,7 @@ public class INKAFARMA_FINAL {
             System.out.print("Clave de tarjeta (4 dígitos): ");
             usuarioClaveTarjeta = sc.nextLine();
         } while (!usuarioClaveTarjeta.matches("\\d{4}"));
-        System.out.println("✅ Registro exitoso.\n");
+        System.out.println("Registro exitoso.\n");
     }
 
     public static boolean iniciarSesion() {
@@ -67,14 +68,14 @@ public class INKAFARMA_FINAL {
             String contra = sc.nextLine();
 
             if (correo.equals(ADMIN_CORREO) && contra.equals(ADMIN_CONTRA)) {
-                System.out.println("🔐 Acceso como ADMIN");
+                System.out.println("Acceso como ADMIN");
                 menuAdmin();
                 return false;
             }
 
             for (int j = 0; j < vendedoresCorreos.size(); j++) {
                 if (correo.equals(vendedoresCorreos.get(j)) && contra.equals(vendedoresContras.get(j))) {
-                    System.out.println("🔓 Bienvenido, vendedor");
+                    System.out.println("Bienvenido, vendedor");
                     esVendedor = true;
                     menuPrincipal();
                     return false;
@@ -82,14 +83,14 @@ public class INKAFARMA_FINAL {
             }
 
             if (correo.equals(usuarioCorreo) && contra.equals(usuarioContraseña)) {
-                System.out.println("✅ Bienvenido/a " + usuarioNombre);
+                System.out.println("Bienvenido/a " + usuarioNombre);
                 esVendedor = false;
                 return true;
             }
 
-            System.out.println("❌ Intento fallido " + (i + 1) + "/3");
+            System.out.println("Intento fallido " + (i + 1) + "/3");
         }
-        System.out.println("🔒 Acceso denegado");
+        System.out.println("Acceso denegado");
         return false;
     }
 
@@ -108,26 +109,26 @@ public class INKAFARMA_FINAL {
             switch (opcion) {
                 case "1":
                     ingresarProductoDesdeAdmin();
-                    break;
+                break;
                 case "2":
                     ingresarOfertaDesdeAdmin();
-                    break;
+                break;
                 case "3":
                     registrarVendedor();
-                    break;
+                break;
                 case "4":
-                    mostrarProductosMamayBebe();
-                    break;
+                    mostrarTodosLosProductos();
+                break;
                 case "5":
                     mostrarOfertas();
-                    break;
+                break;
                 case "6":
                     eliminarProductoPorIndice();
-                    break;
+                break;
                 case "7":
                     return;
                 default:
-                    System.out.println("❌ Opción inválida");
+                    System.out.println("Opción inválida");
             }
         }
     }
@@ -147,11 +148,11 @@ public class INKAFARMA_FINAL {
 
         vendedoresCorreos.add(correo);
         vendedoresContras.add(contra);
-        System.out.println("✅ Vendedor registrado");
+        System.out.println("Vendedor registrado");
     }
 
     public static void eliminarProductoPorIndice() {
-        mostrarProductosMamayBebe();
+        mostrarTodosLosProductos();
         System.out.print("Índice del producto a eliminar: ");
         int i = Integer.parseInt(sc.nextLine());
         if (i >= 0 && i < nombres.size()) {
@@ -159,9 +160,9 @@ public class INKAFARMA_FINAL {
             marcas.remove(i);
             precios.remove(i);
             stocks.remove(i);
-            System.out.println("✅ Producto eliminado");
+            System.out.println("Producto eliminado");
         } else {
-            System.out.println("❌ Índice inválido");
+            System.out.println("Índice inválido");
         }
     }
 
@@ -174,8 +175,10 @@ public class INKAFARMA_FINAL {
         double precio = Double.parseDouble(sc.nextLine());
         System.out.print("Stock: ");
         int stock = Integer.parseInt(sc.nextLine());
-        agregarProducto(nombre, marca, precio, stock);
-        System.out.println("✅ Producto agregado");
+        System.out.print("Categoría: ");
+        String cat = sc.nextLine();
+        agregarProducto(nombre, marca, precio, stock, cat);
+        System.out.println("Producto agregado");
     }
 
     public static void ingresarOfertaDesdeAdmin() {
@@ -191,11 +194,20 @@ public class INKAFARMA_FINAL {
         System.out.println("✅ Oferta agregada");
     }
 
-    public static void agregarProducto(String nombre, String marca, double precio, int stock) {
+    public static void agregarProducto(String nombre, String marca, double precio, int stock, String categoria) {
         nombres.add(nombre);
         marcas.add(marca);
         precios.add(precio);
         stocks.add(stock);
+        categorias.add(categoria.toLowerCase());
+    }
+
+    public static void mostrarTodosLosProductos() {
+        System.out.println("\n=== TODOS LOS PRODUCTOS ===");
+        for (int i = 0; i < nombres.size(); i++) {
+            System.out.println(i + ". " + nombres.get(i) + " - " + marcas.get(i) + " - " + categorias.get(i) +
+                    " - S/" + precios.get(i) + " - Stock: " + stocks.get(i));
+        }
     }
 
     public static void agregarOferta(String nombre, String marca, double precio, int stock) {
@@ -206,19 +218,19 @@ public class INKAFARMA_FINAL {
     }
 
     public static void menuPrincipal() {
-        System.out.print("\n📋 Modo: ");
+        System.out.print("\nModo: ");
         if (esVendedor) {
             System.out.println("Vendedor");
         } else {
             System.out.println("Cliente");
         }
 
-        System.out.println("\n🎯 OFERTA ESPECIAL:");
+        System.out.println("\nOFERTA ESPECIAL:");
         if (!ofertasNombres.isEmpty()) {
             int indice = random.nextInt(ofertasNombres.size());
             String oferta = ofertasNombres.get(indice);
             double precio = ofertasPrecios.get(indice);
-            System.out.println("👉 " + oferta + " - S/" + precio);
+            System.out.println(oferta + " - S/" + precio);
             System.out.print("¿Deseas agregar esta oferta al carrito? (s/n): ");
             String respuesta = sc.nextLine().toLowerCase();
             if (respuesta.equals("s")) {
@@ -226,9 +238,9 @@ public class INKAFARMA_FINAL {
                     carrito.add(oferta);
                     cantidades.add(1);
                     ofertasStocks.set(indice, ofertasStocks.get(indice) - 1);
-                    System.out.println("🛒 Oferta agregada al carrito.");
+                    System.out.println("Oferta agregada al carrito.");
                 } else {
-                    System.out.println("❌ Stock agotado para esta oferta.");
+                    System.out.println("Stock agotado para esta oferta.");
                 }
             }
         }
@@ -254,7 +266,7 @@ public class INKAFARMA_FINAL {
                 case "4":
                     return;
                 default:
-                    System.out.println("❌ Opción inválida");
+                    System.out.println("Opción inválida");
             }
         }
     }
@@ -263,20 +275,24 @@ public class INKAFARMA_FINAL {
         while (true) {
             System.out.println("\n=== CATEGORÍAS ===");
             System.out.println("1. Mamá y Bebé");
-            System.out.println("2. Regresar");
+            System.out.println("2. Nutrición");
+            System.out.println("3. Regresar");
             System.out.print("Opción: ");
-            String opcion = sc.nextLine();
-            switch (opcion) {
+            String op = sc.nextLine();
+            switch (op) {
                 case "1":
-                    mamaybebe();
+                    menuCategoria("mamá y bebé");
                     break;
                 case "2":
+                    menuCategoria("nutrición");
+                break;
+                case "3":
                     return;
-                default:
-                    System.out.println("❌ Opción inválida");
+                default : System.out.println("Opción inválida");
             }
         }
     }
+
 
     public static void verCarrito() {
         System.out.println("\n=== TU CARRITO ===");
@@ -285,46 +301,113 @@ public class INKAFARMA_FINAL {
         }
     }
 
-    public static void mamaybebe() {
+    public static void menuCategoria(String categoria) {
         while (true) {
-            System.out.println("\n=== MAMÁ Y BEBÉ ===");
+            System.out.println("\n=== " + categoria.toUpperCase() + " ===");
             System.out.println("1. Mostrar productos");
             System.out.println("2. Filtrar por marca");
             System.out.println("3. Filtrar por precio");
             System.out.println("4. Regresar");
             System.out.print("Opción: ");
-            String opcion = sc.nextLine();
-            switch (opcion) {
+            String op = sc.nextLine();
+            switch (op) {
                 case "1":
-                    mostrarProductosMamayBebe();
-                    break;
+                    mostrarProductosDeCategoria(categoria);
+                break;
                 case "2":
-                    filtrarPorMarca();
-                    break;
+                    filtrarPorMarcaEnCategoria(categoria);
+                break;
                 case "3":
-                    filtrarPorPrecio();
-                    break;
-                case "4":
-                    return;
-                default:
-                    System.out.println("❌ Opción inválida");
+                    filtrarPorPrecioEnCategoria(categoria);
+                break;
+                case "4": return;
+                default : System.out.println("Opción inválida");
             }
         }
     }
 
-
-    public static void mostrarProductosMamayBebe() {
+    public static void mostrarProductosDeCategoria(String categoria) {
+        boolean hay = false;
         for (int i = 0; i < nombres.size(); i++) {
-            System.out.println(i + ". " + nombres.get(i) + " - " + marcas.get(i) + " - S/" + precios.get(i) + " - Stock: " + stocks.get(i));
+            if (categorias.get(i).equalsIgnoreCase(categoria)) {
+                System.out.println(i + ". " + nombres.get(i) + " - "
+                        + marcas.get(i) + " - S/" + precios.get(i)
+                        + " - Stock: " + stocks.get(i));
+                hay = true;
+            }
         }
-
-        System.out.print("¿Deseas comprar alguno de estos productos? (s/n): ");
-        String respuesta = sc.nextLine().toLowerCase();
-        if (respuesta.equals("s")) {
+        if (!hay) {
+            System.out.println("No hay productos en esta categoría.");
+            return;
+        }
+        System.out.print("¿Deseas comprar alguno? (s/n): ");
+        if (sc.nextLine().equalsIgnoreCase("s")) {
             agregarProductoAlCarritoPorIndice();
         }
     }
+    public static void filtrarPorMarcaEnCategoria(String categoria) {
+        System.out.print("Marca a buscar: ");
+        String filtro = sc.nextLine().toLowerCase();
+        ArrayList<Integer> idx = new ArrayList<>();
 
+        for (int i = 0; i < nombres.size(); i++) {
+            if (categorias.get(i).equalsIgnoreCase(categoria) &&
+                    marcas.get(i).toLowerCase().contains(filtro)) {
+                System.out.println(idx.size() + ". " + nombres.get(i) + " - "
+                        + marcas.get(i) + " - S/" + precios.get(i)
+                        + " - Stock: " + stocks.get(i));
+                idx.add(i);
+            }
+        }
+        agregarFiltradoAlCarrito(idx);
+    }
+
+    public static void filtrarPorPrecioEnCategoria(String categoria) {
+        System.out.print("Precio mínimo: ");
+        double min = Double.parseDouble(sc.nextLine());
+        System.out.print("Precio máximo: ");
+        double max = Double.parseDouble(sc.nextLine());
+        ArrayList<Integer> idx = new ArrayList<>();
+
+        for (int i = 0; i < nombres.size(); i++) {
+            if (categorias.get(i).equalsIgnoreCase(categoria) &&
+                    precios.get(i) >= min && precios.get(i) <= max) {
+                System.out.println(idx.size() + ". " + nombres.get(i) + " - "
+                        + marcas.get(i) + " - S/" + precios.get(i)
+                        + " - Stock: " + stocks.get(i));
+                idx.add(i);
+            }
+        }
+        agregarFiltradoAlCarrito(idx);
+    }
+
+    public static void agregarFiltradoAlCarrito(ArrayList<Integer> lista) {
+        if (lista.isEmpty()) {
+            System.out.println("No se encontraron productos.");
+            return;
+        }
+        System.out.print("¿Deseas comprar alguno? (s/n): ");
+        if (!sc.nextLine().equalsIgnoreCase("s"))
+            return;
+
+        System.out.print("Índice del listado filtrado: ");
+        int pos = Integer.parseInt(sc.nextLine());
+        if (pos < 0 || pos >= lista.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
+        int real = lista.get(pos);
+        System.out.print("Cantidad: ");
+        int cant = Integer.parseInt(sc.nextLine());
+        if (stocks.get(real) < cant) {
+            System.out.println("Stock insuficiente.");
+            return;
+        }
+        carrito.add(nombres.get(real));
+        cantidades.add(cant);
+        stocks.set(real, stocks.get(real) - cant);
+        System.out.println("Producto agregado al carrito.");
+    }
 
     public static void mostrarOfertas() {
         for (int i = 0; i < ofertasNombres.size(); i++) {
@@ -341,103 +424,15 @@ public class INKAFARMA_FINAL {
             carrito.add(nombres.get(indice));
             cantidades.add(cant);
             stocks.set(indice, stocks.get(indice) - cant);
-            System.out.println("✅ Producto agregado");
+            System.out.println("Producto agregado");
         } else {
-            System.out.println("❌ Stock insuficiente");
+            System.out.println("Stock insuficiente");
         }
     }
-
-    public static void filtrarPorMarca() {
-        System.out.print("Marca a buscar: ");
-        String filtro = sc.nextLine().toLowerCase();
-
-        ArrayList<Integer> indicesFiltrados = new ArrayList<>();
-        for (int i = 0; i < nombres.size(); i++) {
-            if (marcas.get(i).toLowerCase().contains(filtro)) {
-                System.out.println(indicesFiltrados.size() + ". " + nombres.get(i) + " - " + marcas.get(i) + " - S/" + precios.get(i) + " - Stock: " + stocks.get(i));
-                indicesFiltrados.add(i);
-            }
-        }
-
-        if (indicesFiltrados.isEmpty()) {
-            System.out.println("❌ No se encontraron productos.");
-            return;
-        }
-
-        System.out.print("¿Deseas agregar alguno al carrito? (s/n): ");
-        String opcion = sc.nextLine().toLowerCase();
-
-        if (opcion.equals("s")) {
-            System.out.print("Índice del producto filtrado: ");
-            int idxTemp = Integer.parseInt(sc.nextLine());
-
-            if (idxTemp >= 0 && idxTemp < indicesFiltrados.size()) {
-                int idxReal = indicesFiltrados.get(idxTemp);
-                System.out.print("Cantidad a agregar: ");
-                int cantidad = Integer.parseInt(sc.nextLine());
-                if (stocks.get(idxReal) >= cantidad) {
-                    carrito.add(nombres.get(idxReal));
-                    cantidades.add(cantidad);
-                    stocks.set(idxReal, stocks.get(idxReal) - cantidad);
-                    System.out.println("✅ Producto agregado al carrito.");
-                } else {
-                    System.out.println("❌ Stock insuficiente.");
-                }
-            } else {
-                System.out.println("❌ Índice inválido.");
-            }
-        }
-    }
-
-
-    public static void filtrarPorPrecio() {
-        System.out.print("Precio mínimo: ");
-        double min = Double.parseDouble(sc.nextLine());
-        System.out.print("Precio máximo: ");
-        double max = Double.parseDouble(sc.nextLine());
-
-        ArrayList<Integer> indicesFiltrados = new ArrayList<>();
-        for (int i = 0; i < precios.size(); i++) {
-            if (precios.get(i) >= min && precios.get(i) <= max) {
-                System.out.println(indicesFiltrados.size() + ". " + nombres.get(i) + " - " + marcas.get(i) + " - S/" + precios.get(i) + " - Stock: " + stocks.get(i));
-                indicesFiltrados.add(i);
-            }
-        }
-
-        if (indicesFiltrados.isEmpty()) {
-            System.out.println("❌ No se encontraron productos.");
-            return;
-        }
-
-        System.out.print("¿Deseas agregar alguno al carrito? (s/n): ");
-        String opcion = sc.nextLine().toLowerCase();
-
-        if (opcion.equals("s")) {
-            System.out.print("Índice del producto filtrado: ");
-            int idxTemp = Integer.parseInt(sc.nextLine());
-
-            if (idxTemp >= 0 && idxTemp < indicesFiltrados.size()) {
-                int idxReal = indicesFiltrados.get(idxTemp);
-                System.out.print("Cantidad a agregar: ");
-                int cantidad = Integer.parseInt(sc.nextLine());
-                if (stocks.get(idxReal) >= cantidad) {
-                    carrito.add(nombres.get(idxReal));
-                    cantidades.add(cantidad);
-                    stocks.set(idxReal, stocks.get(idxReal) - cantidad);
-                    System.out.println("✅ Producto agregado al carrito.");
-                } else {
-                    System.out.println("❌ Stock insuficiente.");
-                }
-            } else {
-                System.out.println("❌ Índice inválido.");
-            }
-        }
-    }
-
 
     public static void finalizarCompra() {
         if (carrito.isEmpty()) {
-            System.out.println("❌ El carrito está vacío.");
+            System.out.println("El carrito está vacío.");
             return;
         }
 
@@ -456,7 +451,7 @@ public class INKAFARMA_FINAL {
         double igv = subtotal * 0.18;
         double total = subtotal + igv;
 
-        System.out.printf("\n💳 Monto total a pagar: S/ %.2f\n", total);
+        System.out.printf("\nMonto total a pagar: S/ %.2f\n", total);
         System.out.print("¿Método de pago? (1. Tarjeta / 2. Efectivo): ");
         String metodo = sc.nextLine();
 
@@ -536,7 +531,7 @@ public class INKAFARMA_FINAL {
 
     public static void exportarBoleta(double subtotal, double igv, double total, double pagado, double vuelto, String nombre, String dni) {
         try {
-            FileWriter fw = new FileWriter("boleta_ventas.txt", true); // true = modo append
+            FileWriter fw = new FileWriter("boleta_ventas.txt", true);
             PrintWriter pw = new PrintWriter(fw);
 
             pw.println("======= BOLETA DE VENTA =======");
@@ -560,22 +555,31 @@ public class INKAFARMA_FINAL {
             pw.println("================================\n");
 
             pw.close();
-            System.out.println("📄 Boleta exportada a 'boleta_ventas.txt'");
+            System.out.println("Boleta exportada a 'boleta_ventas.txt'");
         }
         catch (IOException e) {
-            System.out.println("❌ Error al exportar la boleta.");
+            System.out.println("Error al exportar la boleta.");
         }
     }
 
     public static void main(String[] args) {
-        agregarProducto("Pañales Pequeñín", "Pequeñín", 25.90, 15);
-        agregarProducto("Toallitas Húmedas", "Pequeñín", 9.50, 20);
-        agregarProducto("Leche Enfamil", "BabyCare", 89.00, 10);
-        agregarProducto("Jabón Hipoalergénico", "BabyCare", 12.30, 30);
-        agregarProducto("Shampoo Bebé", "Johnsons", 14.20, 25);
-        agregarProducto("Cereal Infantil", "Nestlé", 10.50, 18);
-        agregarProducto("Biberón Avent", "Nestlé", 34.90, 12);
-        agregarProducto("Pomada para Rozaduras", "Johnsons", 22.80, 14);
+        agregarProducto("Pañales Pequeñín", "Pequeñín", 25.90, 15,"mamá y bebé");
+        agregarProducto("Toallitas Húmedas", "Pequeñín", 9.50, 20,"mamá y bebé");
+        agregarProducto("Leche Enfamil", "BabyCare", 89.00, 10,"mamá y bebé");
+        agregarProducto("Jabón Hipoalergénico", "BabyCare", 12.30, 30,"mamá y bebé");
+        agregarProducto("Shampoo Bebé", "Mimi", 14.20, 25,"mamá y bebé");
+        agregarProducto("Cereal Infantil", "Nestle", 10.50, 18,"mamá y bebé");
+        agregarProducto("Biberón Avent", "Nestle", 34.90, 12,"mamá y bebé");
+        agregarProducto("Pomada para Rozaduras", "Mimi", 22.80, 14,"mamá y bebé");
+
+        agregarProducto("Batido Proteico Chocolate", "Sundown", 110.50, 10, "nutrición");
+        agregarProducto("Multivitamínico Hombre", "Centrum", 56.90, 15, "nutrición");
+        agregarProducto("Multivitamínico Mujer", "Centrum", 58.90, 12, "nutrición");
+        agregarProducto("Omega 3 Pescado", "Sundown", 42.30, 20, "nutrición");
+        agregarProducto("Vitamina C 1000mg", "Redoxon", 30.00, 18, "nutrición");
+        agregarProducto("Colágeno Hidrolizado", "Redoxon", 125.00, 8, "nutrición");
+        agregarProducto("Hierro + Ácido Fólico", "Ferrer", 22.70, 25, "nutrición");
+        agregarProducto("Probióticos 10 cepas", "Ferrer", 65.40, 10, "nutrición");
 
         agregarOferta("Multivitaminas", "Centrum", 45.90, 8);
         agregarOferta("Proteína Whey", "Optimum", 125.00, 5);
@@ -602,10 +606,10 @@ public class INKAFARMA_FINAL {
                     }
                     break;
                 case "3":
-                    System.out.println("👋 Gracias por visitar INKAFARMA");
+                    System.out.println("Gracias por visitar INKAFARMA");
                     return;
                 default:
-                    System.out.println("❌ Opción inválida");
+                    System.out.println("Opción inválida");
             }
         }
     }
