@@ -25,6 +25,7 @@ public class INKAFARMA_FINAL {
     static ArrayList<String> ofertasMarcas = new ArrayList<>();
     static ArrayList<Double> ofertasPrecios = new ArrayList<>();
     static ArrayList<Integer> ofertasStocks = new ArrayList<>();
+    static ArrayList<String> ofertasCategorias = new ArrayList<>();
 
     static ArrayList<String> carrito = new ArrayList<>();
     static ArrayList<Integer> cantidades = new ArrayList<>();
@@ -190,7 +191,9 @@ public class INKAFARMA_FINAL {
         double p = Double.parseDouble(sc.nextLine());
         System.out.print("Stock: ");
         int s = Integer.parseInt(sc.nextLine());
-        agregarOferta(n, m, p, s);
+        System.out.print("Categoría: ");
+        String cat = sc.nextLine();
+        agregarOferta(n, m, p, s, cat);
         System.out.println("✅ Oferta agregada");
     }
 
@@ -210,11 +213,12 @@ public class INKAFARMA_FINAL {
         }
     }
 
-    public static void agregarOferta(String nombre, String marca, double precio, int stock) {
+    public static void agregarOferta(String nombre, String marca, double precio, int stock, String categoria) {
         ofertasNombres.add(nombre);
         ofertasMarcas.add(marca);
         ofertasPrecios.add(precio);
         ofertasStocks.add(stock);
+        ofertasCategorias.add(categoria.toLowerCase());
     }
 
     public static void menuPrincipal() {
@@ -411,9 +415,15 @@ public class INKAFARMA_FINAL {
 
     public static void mostrarOfertas() {
         for (int i = 0; i < ofertasNombres.size(); i++) {
-            System.out.println(i + ". " + ofertasNombres.get(i) + " - " + ofertasMarcas.get(i) + " - S/" + ofertasPrecios.get(i) + " - Stock: " + ofertasStocks.get(i));
+            System.out.println(i + ". " +
+            ofertasNombres.get(i) + " - " +
+            ofertasMarcas.get(i) + " - " +
+            ofertasCategorias.get(i) + " - S/" +
+            ofertasPrecios.get(i) + " - Stock: " +
+            ofertasStocks.get(i));
         }
     }
+
 
     public static void agregarProductoAlCarritoPorIndice() {
         System.out.print("Índice del producto: ");
@@ -581,10 +591,10 @@ public class INKAFARMA_FINAL {
         agregarProducto("Hierro + Ácido Fólico", "Ferrer", 22.70, 25, "nutrición");
         agregarProducto("Probióticos 10 cepas", "Ferrer", 65.40, 10, "nutrición");
 
-        agregarOferta("Multivitaminas", "Centrum", 45.90, 8);
-        agregarOferta("Proteína Whey", "Optimum", 125.00, 5);
-        agregarOferta("Vitamina C 1000mg", "Sundown", 30.50, 10);
-        agregarOferta("Omega 3", "Nature Made", 40.00, 6);
+        agregarOferta("Multivitaminas", "Centrum", 45.90, 8,"nutrición");
+        agregarOferta("Proteína Whey", "Optimum", 125.00, 5,"nutrición");
+        agregarOferta("Vitamina C 1000mg", "Sundown", 30.50, 10,"nutrición");
+        agregarOferta("Omega 3", "Nature Made", 40.00, 6,"nutrición");
 
         vendedoresCorreos.add("vendedor@inkafarma.com");
         vendedoresContras.add("Vendedor123!");
