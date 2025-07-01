@@ -541,7 +541,13 @@ public class INKAFARMA_FINAL {
         }
 
         double igv = subtotal * 0.18;
-        double total = subtotal + igv;
+        double totalSinDelivery = subtotal + igv;
+
+        final double COSTO_DELIVERY = 10.00;
+        double total = totalSinDelivery;
+        if (!esVendedor) {
+            total += COSTO_DELIVERY;
+        }
 
         System.out.printf("\nMonto total a pagar: S/ %.2f\n", total);
         System.out.print("¿Método de pago? (1. Tarjeta / 2. Efectivo): ");
@@ -560,10 +566,12 @@ public class INKAFARMA_FINAL {
             dniComprador = usuarioDni;
         }
 
+        double montoPagado = 0;
+
         if (metodo.equals("2")) {
             System.out.print("Ingrese monto en efectivo: ");
-            double monto = Double.parseDouble(sc.nextLine());
-            if (monto < total) {
+            montoPagado = Double.parseDouble(sc.nextLine());
+            if (montoPagado < total) {
                 System.out.println("❌ Monto insuficiente. Operación cancelada.");
                 return;
             }
@@ -573,33 +581,31 @@ public class INKAFARMA_FINAL {
                 direccionCliente = sc.nextLine();
             }
 
-            boletaVenta(total, monto, nombreComprador, dniComprador);
         } else {
+            montoPagado = total;
             if (!esVendedor) {
                 System.out.print("Ingrese dirección para el envío: ");
                 direccionCliente = sc.nextLine();
             }
-
-            boletaVenta(total, total, nombreComprador, dniComprador);
         }
-
+        boletaVenta(subtotal, igv, total, montoPagado, nombreComprador, dniComprador, !esVendedor ? COSTO_DELIVERY : 0);
         carrito.clear();
         cantidades.clear();
     }
 
-    public static void boletaVenta(double total, double pagado, String nombreComprador, String dniComprador) {
-        double subtotal = total / 1.18;
-        double igv = total - subtotal;
+    public static void boletaVenta(double subtotal, double igv, double total, double pagado, String nombreComprador, String dniComprador, double delivery) {
+
         double vuelto = pagado - total;
 
         System.out.println("======= INKAFARMA ======");
         System.out.println("======= BOLETA DE VENTA =======");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        System.out.println("Fecha: " + LocalDateTime.now().format(formato));
         System.out.println("DNI: " + dniComprador);
         System.out.println("Nombre: " + nombreComprador);
         if (!esVendedor && direccionCliente != null && !direccionCliente.isEmpty()) {
             System.out.println("Dirección: " + direccionCliente);
         }
-
         System.out.println("\nProductos comprados:");
         for (int i = 0; i < carrito.size(); i++) {
             String nombre = carrito.get(i);
@@ -612,6 +618,9 @@ public class INKAFARMA_FINAL {
 
         System.out.printf("\nSubtotal: S/ %.2f\n", subtotal);
         System.out.printf("IGV (18%%): S/ %.2f\n", igv);
+        if (delivery > 0) {
+            System.out.printf("Delivery: S/ %.2f\n", delivery);
+        }
         System.out.printf("TOTAL: S/ %.2f\n", total);
         System.out.printf("Pagado: S/ %.2f\n", pagado);
         System.out.printf("Vuelto: S/ %.2f\n", vuelto);
@@ -633,6 +642,8 @@ public class INKAFARMA_FINAL {
 
             pw.println("=========== INKAFARMA ==========");
             pw.println("======= BOLETA DE VENTA =======");
+            DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            pw.println("Fecha: " + LocalDateTime.now().format(formato));
             pw.println("DNI: " + dni);
             pw.println("Nombre: " + nombre);
             pw.println("\nProductos comprados:");
