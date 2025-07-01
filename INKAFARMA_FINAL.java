@@ -657,7 +657,8 @@ public class INKAFARMA_FINAL {
             pw.println("Fecha: " + LocalDateTime.now().format(formato));
             pw.println("DNI: " + dni);
             pw.println("Nombre: " + nombre);
-            pw.println("\nProductos comprados:");
+            pw.println("\n--------------------------");
+            pw.println("Productos comprados:");
             for (int i = 0; i < carrito.size(); i++) {
                 String nombreProd = carrito.get(i);
                 int cant = cantidades.get(i);
@@ -666,8 +667,8 @@ public class INKAFARMA_FINAL {
                 double precio = (index != -1 && nombres.contains(nombreProd)) ? precios.get(index) : ofertasPrecios.get(index);
                 pw.printf("- %s x%d - S/ %.2f\n", nombreProd, cant, precio * cant);
             }
-
-            pw.printf("\nSubtotal: S/ %.2f\n", subtotal);
+            pw.println("--------------------------\n");
+            pw.printf("Subtotal: S/ %.2f\n", subtotal);
             pw.printf("IGV (18%%): S/ %.2f\n", igv);
             pw.printf("TOTAL: S/ %.2f\n", total);
             pw.printf("Pagado: S/ %.2f\n", pagado);
