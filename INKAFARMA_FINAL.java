@@ -320,9 +320,21 @@ public class INKAFARMA_FINAL {
 
     public static void verCarrito() {
         System.out.println("\n=== TU CARRITO ===");
+        double total = 0;
         for (int i = 0; i < carrito.size(); i++) {
-            System.out.println("- " + carrito.get(i) + " x" + cantidades.get(i));
+            String nombre = carrito.get(i);
+            int cant = cantidades.get(i);
+
+            int index = nombres.indexOf(nombre);
+            if (index == -1) index = ofertasNombres.indexOf(nombre);
+
+            double precio = (index != -1 && nombres.contains(nombre)) ? precios.get(index) : ofertasPrecios.get(index);
+            double precioTotal = precio * cant;
+            total += precioTotal;
+
+            System.out.printf("- %s x%d - S/ %.2f\n", nombre, cant, precioTotal);
         }
+        System.out.printf("Total actual del carrito: S/ %.2f\n", total);
     }
 
     public static void vaciarCarrito() {
