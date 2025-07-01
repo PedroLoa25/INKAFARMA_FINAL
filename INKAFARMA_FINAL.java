@@ -435,16 +435,34 @@ public class INKAFARMA_FINAL {
         double min = Double.parseDouble(sc.nextLine());
         System.out.print("Precio máximo: ");
         double max = Double.parseDouble(sc.nextLine());
-        ArrayList<Integer> idx = new ArrayList<>();
 
+        System.out.println("Orden:");
+        System.out.println("1. De menor a mayor");
+        System.out.println("2. De mayor a menor");
+        System.out.print("Opción: ");
+        int orden = Integer.parseInt(sc.nextLine());
+
+        ArrayList<Integer> idx = new ArrayList<>();
         for (int i = 0; i < nombres.size(); i++) {
             if (categorias.get(i).equalsIgnoreCase(categoria) &&
                     precios.get(i) >= min && precios.get(i) <= max) {
-                System.out.println(idx.size() + ". " + nombres.get(i) + " - "
-                        + marcas.get(i) + " - S/" + precios.get(i)
-                        + " - Stock: " + stocks.get(i));
                 idx.add(i);
             }
+        }
+        if (idx.isEmpty()) {
+            System.out.println("No se encontraron productos.");
+            return;
+        }
+
+        idx.sort((a, b) -> (orden == 2)
+                ? Double.compare(precios.get(b), precios.get(a))
+                : Double.compare(precios.get(a), precios.get(b)));
+
+        for (int pos = 0; pos < idx.size(); pos++) {
+            int i = idx.get(pos);
+            System.out.println(pos + ". " + nombres.get(i) + " - " +
+                    marcas.get(i) + " - S/" + precios.get(i) +
+                    " - Stock: " + stocks.get(i));
         }
         agregarFiltradoAlCarrito(idx);
     }
