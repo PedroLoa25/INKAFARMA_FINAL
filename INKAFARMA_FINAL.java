@@ -97,6 +97,22 @@ public class INKAFARMA_FINAL {
         return false;
     }
 
+    public static void agregarProducto(String nombre, String marca, double precio, int stock, String categoria) {
+        nombres.add(nombre);
+        marcas.add(marca);
+        precios.add(precio);
+        stocks.add(stock);
+        categorias.add(categoria.toLowerCase());
+    }
+
+    public static void agregarOferta(String nombre, String marca, double precio, int stock, String categoria) {
+        ofertasNombres.add(nombre);
+        ofertasMarcas.add(marca);
+        ofertasPrecios.add(precio);
+        ofertasStocks.add(stock);
+        ofertasCategorias.add(categoria.toLowerCase());
+    }
+
     public static void menuAdmin() {
         while (true) {
             System.out.println("\n=== MENÚ ADMIN ===");
@@ -136,39 +152,6 @@ public class INKAFARMA_FINAL {
         }
     }
 
-    public static void registrarVendedor() {
-        System.out.println("=== REGISTRAR VENDEDOR ===");
-        String correo, contra;
-        do {
-            System.out.print("Correo electrónico: ");
-            correo = sc.nextLine();
-        } while (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"));
-
-        do {
-            System.out.print("Contraseña (mín. 8 caracteres, 1 mayús., 1 minús., 1 número, 1 símbolo): ");
-            contra = sc.nextLine();
-        } while (!contra.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$"));
-
-        vendedoresCorreos.add(correo);
-        vendedoresContras.add(contra);
-        System.out.println("Vendedor registrado");
-    }
-
-    public static void eliminarProductoPorIndice() {
-        mostrarTodosLosProductos();
-        System.out.print("Índice del producto a eliminar: ");
-        int i = Integer.parseInt(sc.nextLine());
-        if (i >= 0 && i < nombres.size()) {
-            nombres.remove(i);
-            marcas.remove(i);
-            precios.remove(i);
-            stocks.remove(i);
-            System.out.println("Producto eliminado");
-        } else {
-            System.out.println("Índice inválido");
-        }
-    }
-
     public static void ingresarProductoDesdeAdmin() {
         System.out.print("Nombre: ");
         String nombre = sc.nextLine();
@@ -199,12 +182,22 @@ public class INKAFARMA_FINAL {
         System.out.println("Oferta agregada");
     }
 
-    public static void agregarProducto(String nombre, String marca, double precio, int stock, String categoria) {
-        nombres.add(nombre);
-        marcas.add(marca);
-        precios.add(precio);
-        stocks.add(stock);
-        categorias.add(categoria.toLowerCase());
+    public static void registrarVendedor() {
+        System.out.println("=== REGISTRAR VENDEDOR ===");
+        String correo, contra;
+        do {
+            System.out.print("Correo electrónico: ");
+            correo = sc.nextLine();
+        } while (!correo.matches("^[\\w.-]+@[\\w.-]+\\.[a-zA-Z]{2,}$"));
+
+        do {
+            System.out.print("Contraseña (mín. 8 caracteres, 1 mayús., 1 minús., 1 número, 1 símbolo): ");
+            contra = sc.nextLine();
+        } while (!contra.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,}$"));
+
+        vendedoresCorreos.add(correo);
+        vendedoresContras.add(contra);
+        System.out.println("Vendedor registrado");
     }
 
     public static void mostrarTodosLosProductos() {
@@ -215,12 +208,30 @@ public class INKAFARMA_FINAL {
         }
     }
 
-    public static void agregarOferta(String nombre, String marca, double precio, int stock, String categoria) {
-        ofertasNombres.add(nombre);
-        ofertasMarcas.add(marca);
-        ofertasPrecios.add(precio);
-        ofertasStocks.add(stock);
-        ofertasCategorias.add(categoria.toLowerCase());
+    public static void mostrarOfertas() {
+        for (int i = 0; i < ofertasNombres.size(); i++) {
+            System.out.println(i + ". " +
+                    ofertasNombres.get(i) + " - " +
+                    ofertasMarcas.get(i) + " - " +
+                    ofertasCategorias.get(i) + " - S/" +
+                    ofertasPrecios.get(i) + " - Stock: " +
+                    ofertasStocks.get(i));
+        }
+    }
+
+    public static void eliminarProductoPorIndice() {
+        mostrarTodosLosProductos();
+        System.out.print("Índice del producto a eliminar: ");
+        int i = Integer.parseInt(sc.nextLine());
+        if (i >= 0 && i < nombres.size()) {
+            nombres.remove(i);
+            marcas.remove(i);
+            precios.remove(i);
+            stocks.remove(i);
+            System.out.println("Producto eliminado");
+        } else {
+            System.out.println("Índice inválido");
+        }
     }
 
     public static void menuPrincipal() {
@@ -283,7 +294,6 @@ public class INKAFARMA_FINAL {
                 default : System.out.println("Opción inválida");
             }
         }
-
     }
 
     public static void categorias() {
@@ -307,7 +317,6 @@ public class INKAFARMA_FINAL {
             }
         }
     }
-
 
     public static void verCarrito() {
         System.out.println("\n=== TU CARRITO ===");
@@ -413,6 +422,7 @@ public class INKAFARMA_FINAL {
             agregarProductoAlCarritoPorIndice();
         }
     }
+
     public static void filtrarPorMarcaEnCategoria(String categoria) {
         System.out.print("Marca a buscar: ");
         String filtro = sc.nextLine().toLowerCase();
@@ -495,18 +505,6 @@ public class INKAFARMA_FINAL {
         System.out.println("Producto agregado al carrito.");
     }
 
-    public static void mostrarOfertas() {
-        for (int i = 0; i < ofertasNombres.size(); i++) {
-            System.out.println(i + ". " +
-                    ofertasNombres.get(i) + " - " +
-                    ofertasMarcas.get(i) + " - " +
-                    ofertasCategorias.get(i) + " - S/" +
-                    ofertasPrecios.get(i) + " - Stock: " +
-                    ofertasStocks.get(i));
-        }
-    }
-
-
     public static void agregarProductoAlCarritoPorIndice() {
         System.out.print("Índice del producto: ");
         int indice = Integer.parseInt(sc.nextLine());
@@ -561,7 +559,8 @@ public class INKAFARMA_FINAL {
             nombreComprador = sc.nextLine();
             System.out.print("Ingrese su DNI para la boleta: ");
             dniComprador = sc.nextLine();
-        } else {
+        }
+        else {
             nombreComprador = usuarioNombre;
             dniComprador = usuarioDni;
         }
@@ -596,8 +595,8 @@ public class INKAFARMA_FINAL {
 
         double vuelto = pagado - total;
 
-        System.out.println("======= INKAFARMA ======");
-        System.out.println("======= BOLETA DE VENTA =======");
+        System.out.println("============ INKAFARMA ============");
+        System.out.println("====== BOLETA DE VENTA ======");
         DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
         System.out.println("Fecha: " + LocalDateTime.now().format(formato));
         System.out.println("DNI: " + dniComprador);
@@ -605,7 +604,8 @@ public class INKAFARMA_FINAL {
         if (!esVendedor && direccionCliente != null && !direccionCliente.isEmpty()) {
             System.out.println("Dirección: " + direccionCliente);
         }
-        System.out.println("\nProductos comprados:");
+        System.out.println("\n--------------------------");
+        System.out.println("Productos comprados:");
         for (int i = 0; i < carrito.size(); i++) {
             String nombre = carrito.get(i);
             int cant = cantidades.get(i);
@@ -614,7 +614,7 @@ public class INKAFARMA_FINAL {
             double precio = (index != -1 && nombres.contains(nombre)) ? precios.get(index) : ofertasPrecios.get(index);
             System.out.printf("- %s x%d - S/ %.2f\n", nombre, cant, precio * cant);
         }
-
+        System.out.println("--------------------------");
         System.out.printf("\nSubtotal: S/ %.2f\n", subtotal);
         System.out.printf("IGV (18%%): S/ %.2f\n", igv);
         if (delivery > 0) {
@@ -623,7 +623,7 @@ public class INKAFARMA_FINAL {
         System.out.printf("TOTAL: S/ %.2f\n", total);
         System.out.printf("Pagado: S/ %.2f\n", pagado);
         System.out.printf("Vuelto: S/ %.2f\n", vuelto);
-        System.out.println("==============================");
+        System.out.println("===================================");
 
         if (esVendedor) {
             exportarBoleta(subtotal, igv, total, pagado, vuelto, nombreComprador, dniComprador);
@@ -639,7 +639,7 @@ public class INKAFARMA_FINAL {
             FileWriter fw = new FileWriter(nombreArchivo);
             PrintWriter pw = new PrintWriter(fw);
 
-            pw.println("=========== INKAFARMA ==========");
+            pw.println("============ INKAFARMA ============");
             pw.println("======= BOLETA DE VENTA =======");
             DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
             pw.println("Fecha: " + LocalDateTime.now().format(formato));
@@ -660,7 +660,7 @@ public class INKAFARMA_FINAL {
             pw.printf("TOTAL: S/ %.2f\n", total);
             pw.printf("Pagado: S/ %.2f\n", pagado);
             pw.printf("Vuelto: S/ %.2f\n", vuelto);
-            pw.println("=================================\n");
+            pw.println("===================================\n");
 
             pw.close();
             System.out.println("Boleta exportada como: " + nombreArchivo);
