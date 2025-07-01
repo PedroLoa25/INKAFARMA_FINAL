@@ -4,6 +4,8 @@ import java.util.Random;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class INKAFARMA_FINAL {
     static Scanner sc = new Scanner(System.in);
@@ -110,22 +112,22 @@ public class INKAFARMA_FINAL {
             switch (opcion) {
                 case "1":
                     ingresarProductoDesdeAdmin();
-                break;
+                    break;
                 case "2":
                     ingresarOfertaDesdeAdmin();
-                break;
+                    break;
                 case "3":
                     registrarVendedor();
-                break;
+                    break;
                 case "4":
                     mostrarTodosLosProductos();
-                break;
+                    break;
                 case "5":
                     mostrarOfertas();
-                break;
+                    break;
                 case "6":
                     eliminarProductoPorIndice();
-                break;
+                    break;
                 case "7":
                     return;
                 default:
@@ -254,25 +256,34 @@ public class INKAFARMA_FINAL {
             System.out.println("1. Ver categorías");
             System.out.println("2. Ver carrito");
             System.out.println("3. Finalizar compra");
-            System.out.println("4. Salir");
+            System.out.println("4. Vaciar carrito");
+            System.out.println("5. Eliminar producto del carrito");
+            System.out.println("6. Salir");
             System.out.print("Opción: ");
             String opcion = sc.nextLine();
+
             switch (opcion) {
                 case "1":
                     categorias();
-                    break;
+                break;
                 case "2":
                     verCarrito();
-                    break;
+                break;
                 case "3":
                     finalizarCompra();
-                    break;
+                break;
                 case "4":
+                    vaciarCarrito();
+                break;
+                case "5":
+                    eliminarDelCarrito();
+                break;
+                case "6":
                     return;
-                default:
-                    System.out.println("Opción inválida");
+                default : System.out.println("Opción inválida");
             }
         }
+
     }
 
     public static void categorias() {
@@ -289,7 +300,7 @@ public class INKAFARMA_FINAL {
                     break;
                 case "2":
                     menuCategoria("nutrición");
-                break;
+                    break;
                 case "3":
                     return;
                 default : System.out.println("Opción inválida");
@@ -305,6 +316,59 @@ public class INKAFARMA_FINAL {
         }
     }
 
+    public static void vaciarCarrito() {
+        if (carrito.isEmpty()) {
+            System.out.println("🛒 El carrito ya está vacío.");
+            return;
+        }
+        carrito.clear();
+        cantidades.clear();
+        System.out.println("🗑️  Carrito vaciado.");
+    }
+
+    public static void eliminarDelCarrito() {
+        if (carrito.isEmpty()) {
+            System.out.println("🛒 El carrito está vacío.");
+            return;
+        }
+        verCarrito();
+        System.out.print("Índice del producto a eliminar: ");
+        int idx = Integer.parseInt(sc.nextLine());
+
+        if (idx < 0 || idx >= carrito.size()) {
+            System.out.println("Índice inválido.");
+            return;
+        }
+
+        System.out.print("Cantidad a quitar (máx " + cantidades.get(idx) + "): ");
+        int qty = Integer.parseInt(sc.nextLine());
+
+        if (qty <= 0 || qty > cantidades.get(idx)) {
+            System.out.println("Cantidad inválida.");
+            return;
+        }
+
+        String prod = carrito.get(idx);
+        int invIndex = nombres.indexOf(prod);
+        if (invIndex != -1) {
+            stocks.set(invIndex, stocks.get(invIndex) + qty);
+        } else {
+            int offerIndex = ofertasNombres.indexOf(prod);
+            if (offerIndex != -1) {
+                ofertasStocks.set(offerIndex, ofertasStocks.get(offerIndex) + qty);
+            }
+        }
+
+        int nuevaCant = cantidades.get(idx) - qty;
+        if (nuevaCant == 0) {
+            carrito.remove(idx);
+            cantidades.remove(idx);
+        } else {
+            cantidades.set(idx, nuevaCant);
+        }
+        System.out.println("✅ Producto actualizado/eliminado del carrito.");
+    }
+
     public static void menuCategoria(String categoria) {
         while (true) {
             System.out.println("\n=== " + categoria.toUpperCase() + " ===");
@@ -317,13 +381,13 @@ public class INKAFARMA_FINAL {
             switch (op) {
                 case "1":
                     mostrarProductosDeCategoria(categoria);
-                break;
+                    break;
                 case "2":
                     filtrarPorMarcaEnCategoria(categoria);
-                break;
+                    break;
                 case "3":
                     filtrarPorPrecioEnCategoria(categoria);
-                break;
+                    break;
                 case "4": return;
                 default : System.out.println("Opción inválida");
             }
@@ -416,11 +480,11 @@ public class INKAFARMA_FINAL {
     public static void mostrarOfertas() {
         for (int i = 0; i < ofertasNombres.size(); i++) {
             System.out.println(i + ". " +
-            ofertasNombres.get(i) + " - " +
-            ofertasMarcas.get(i) + " - " +
-            ofertasCategorias.get(i) + " - S/" +
-            ofertasPrecios.get(i) + " - Stock: " +
-            ofertasStocks.get(i));
+                    ofertasNombres.get(i) + " - " +
+                    ofertasMarcas.get(i) + " - " +
+                    ofertasCategorias.get(i) + " - S/" +
+                    ofertasPrecios.get(i) + " - Stock: " +
+                    ofertasStocks.get(i));
         }
     }
 
@@ -510,7 +574,8 @@ public class INKAFARMA_FINAL {
         double igv = total - subtotal;
         double vuelto = pagado - total;
 
-        System.out.println("\n======= BOLETA DE VENTA =======");
+        System.out.println("======= INKAFARMA ======");
+        System.out.println("======= BOLETA DE VENTA =======");
         System.out.println("DNI: " + dniComprador);
         System.out.println("Nombre: " + nombreComprador);
         if (!esVendedor && direccionCliente != null && !direccionCliente.isEmpty()) {
@@ -541,9 +606,14 @@ public class INKAFARMA_FINAL {
 
     public static void exportarBoleta(double subtotal, double igv, double total, double pagado, double vuelto, String nombre, String dni) {
         try {
-            FileWriter fw = new FileWriter("boleta_ventas.txt", true);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm-ss");
+            String fechaHora = LocalDateTime.now().format(formatter);
+            String nombreArchivo = "boleta_" + fechaHora + ".txt";
+
+            FileWriter fw = new FileWriter(nombreArchivo);
             PrintWriter pw = new PrintWriter(fw);
 
+            pw.println("=========== INKAFARMA ==========");
             pw.println("======= BOLETA DE VENTA =======");
             pw.println("DNI: " + dni);
             pw.println("Nombre: " + nombre);
@@ -562,13 +632,13 @@ public class INKAFARMA_FINAL {
             pw.printf("TOTAL: S/ %.2f\n", total);
             pw.printf("Pagado: S/ %.2f\n", pagado);
             pw.printf("Vuelto: S/ %.2f\n", vuelto);
-            pw.println("================================\n");
+            pw.println("=================================\n");
 
             pw.close();
-            System.out.println("Boleta exportada a 'boleta_ventas.txt'");
+            System.out.println("Boleta exportada como: " + nombreArchivo);
         }
         catch (IOException e) {
-            System.out.println("Error al exportar la boleta.");
+            System.out.println("❌ Error al exportar la boleta.");
         }
     }
 
@@ -591,10 +661,10 @@ public class INKAFARMA_FINAL {
         agregarProducto("Hierro + Ácido Fólico", "Ferrer", 22.70, 25, "nutrición");
         agregarProducto("Probióticos 10 cepas", "Ferrer", 65.40, 10, "nutrición");
 
-        agregarOferta("Multivitaminas", "Centrum", 45.90, 8,"nutrición");
-        agregarOferta("Proteína Whey", "Optimum", 125.00, 5,"nutrición");
-        agregarOferta("Vitamina C 1000mg", "Sundown", 30.50, 10,"nutrición");
-        agregarOferta("Omega 3", "Nature Made", 40.00, 6,"nutrición");
+        agregarOferta("Multivitaminas", "Centrum", 45.90, 4,"nutrición");
+        agregarOferta("Proteína Whey", "Optimum", 125.00, 4,"nutrición");
+        agregarOferta("Vitamina C 1000mg", "Sundown", 30.50, 4,"nutrición");
+        agregarOferta("Omega 3", "Nature Made", 40.00, 4,"nutrición");
 
         vendedoresCorreos.add("vendedor@inkafarma.com");
         vendedoresContras.add("Vendedor123!");
