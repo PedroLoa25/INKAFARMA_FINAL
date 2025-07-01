@@ -196,7 +196,7 @@ public class INKAFARMA_FINAL {
         System.out.print("Categoría: ");
         String cat = sc.nextLine();
         agregarOferta(n, m, p, s, cat);
-        System.out.println("✅ Oferta agregada");
+        System.out.println("Oferta agregada");
     }
 
     public static void agregarProducto(String nombre, String marca, double precio, int stock, String categoria) {
@@ -265,19 +265,19 @@ public class INKAFARMA_FINAL {
             switch (opcion) {
                 case "1":
                     categorias();
-                break;
+                    break;
                 case "2":
                     verCarrito();
-                break;
+                    break;
                 case "3":
                     finalizarCompra();
-                break;
+                    break;
                 case "4":
                     vaciarCarrito();
-                break;
+                    break;
                 case "5":
                     eliminarDelCarrito();
-                break;
+                    break;
                 case "6":
                     return;
                 default : System.out.println("Opción inválida");
@@ -366,7 +366,7 @@ public class INKAFARMA_FINAL {
         } else {
             cantidades.set(idx, nuevaCant);
         }
-        System.out.println("✅ Producto actualizado/eliminado del carrito.");
+        System.out.println("Producto actualizado/eliminado del carrito.");
     }
 
     public static void menuCategoria(String categoria) {
@@ -572,16 +572,15 @@ public class INKAFARMA_FINAL {
             System.out.print("Ingrese monto en efectivo: ");
             montoPagado = Double.parseDouble(sc.nextLine());
             if (montoPagado < total) {
-                System.out.println("❌ Monto insuficiente. Operación cancelada.");
+                System.out.println("Monto insuficiente. Operación cancelada.");
                 return;
             }
-
             if (!esVendedor) {
                 System.out.print("Ingrese dirección para el envío: ");
                 direccionCliente = sc.nextLine();
             }
-
-        } else {
+        }
+        else {
             montoPagado = total;
             if (!esVendedor) {
                 System.out.print("Ingrese dirección para el envío: ");
@@ -667,7 +666,7 @@ public class INKAFARMA_FINAL {
             System.out.println("Boleta exportada como: " + nombreArchivo);
         }
         catch (IOException e) {
-            System.out.println("❌ Error al exportar la boleta.");
+            System.out.println("Error al exportar la boleta.");
         }
     }
 
